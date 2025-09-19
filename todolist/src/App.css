@@ -1,23 +1,37 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  height: 100%; /* important for vertical centering */
+  justify-content: center;
+}
+
 .todo-app {
   min-height: 100vh;
+  width: 200vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background: #faf8f8;
+  padding: 20px 20px;
+  margin-top: 400px;
 }
 .header {
   color: #ecdcdc;
   font-size: 5em;
   margin-bottom: 1em;
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
 }
 .todo-card {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 24px #eee;
   width: 390px;
-  padding: 1.5em 1.7em;
+  padding: 50px 60px 40px 60px;
+  margin: auto;
 }
 .input {
   padding: 0.9em;
@@ -30,7 +44,7 @@
   outline: none;
 }
 .add-btn {
-  margin-bottom: .9em;
+  margin-bottom: 0.9em;
   padding: 8px 18px;
   border-radius: 7px;
   border: none;
@@ -40,7 +54,7 @@
   letter-spacing: 0.5px;
 }
 .list {
-  margin-bottom: .6em;
+  margin-bottom: 0.6em;
 }
 .todo-row {
   position: relative;
@@ -79,16 +93,5 @@
 .footer {
   color: #cabebe;
   font-size: 0.96em;
-  margin-top: .7em;
+  margin-top: 0.7em;
 }
-/* 
-
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
-
-*/
