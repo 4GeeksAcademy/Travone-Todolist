@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 
 const API = "https://playground.4geeks.com/todo";
-const USER = "Gemini"; 
+const USER = "Gemini";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -10,48 +10,44 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  
-  const createUser = async () => {
+  const createUser = useCallback(async () => {
     try {
-      const response = await fetch(`${API}/users/${USER}`, { 
+      const response = await fetch(`${API}/users/${USER}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to create user: ${response.status}`);
       }
-      
+
       console.log("User created successfully");
     } catch (err) {
       console.error("Error creating user:", err);
       setError("Failed to create user");
     }
-  };
+  }, []);
 
-  
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async () => {
     try {
       setError(null);
       const resp = await fetch(`${API}/users/${USER}`);
-      
+
       if (resp.status === 404) {
         await createUser();
-        return fetchTodos(); 
+        return fetchTodos();
       }
-      
+
       if (!resp.ok) {
         throw new Error(`Failed to fetch todos: ${resp.status}`);
       }
-      
+
       const data = await resp.json();
-      
-      
+
       const userTodos = data.todos || [];
       setTodos(Array.isArray(userTodos) ? userTodos : []);
-      
     } catch (err) {
       setTodos([]);
       setError("Failed to load todos");
@@ -59,35 +55,34 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [createUser]);
 
   useEffect(() => {
     fetchTodos();
-  }, []);
+  }, [fetchTodos]);
 
   const addTodo = async () => {
     if (!input.trim()) return;
-    
+
     try {
       setError(null);
       const response = await fetch(`${API}/todos/${USER}`, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json" 
+        headers: {
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          label: input.trim(), 
-          is_done: false 
+        body: JSON.stringify({
+          label: input.trim(),
+          is_done: false,
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to add todo: ${response.status}`);
       }
-      
+
       setInput("");
-      await fetchTodos(); 
-      
+      await fetchTodos();
     } catch (err) {
       console.error("Error adding todo:", err);
       setError("Failed to add todo");
@@ -97,16 +92,15 @@ function App() {
   const deleteTodo = async (id) => {
     try {
       setError(null);
-      const response = await fetch(`${API}/todos/${id}`, { 
-        method: "DELETE" 
+      const response = await fetch(`${API}/todos/${id}`, {
+        method: "DELETE",
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to delete todo: ${response.status}`);
       }
-      
+
       await fetchTodos(); // Refresh the list
-      
     } catch (err) {
       console.error("Error deleting todo:", err);
       setError("Failed to delete todo");
@@ -116,14 +110,13 @@ function App() {
   const clearAllTasks = async () => {
     try {
       setError(null);
-      
-      const deletePromises = todos.map(todo => 
+
+      const deletePromises = todos.map((todo) =>
         fetch(`${API}/todos/${todo.id}`, { method: "DELETE" })
       );
-      
+
       await Promise.all(deletePromises);
-      await fetchTodos(); 
-      
+      await fetchTodos();
     } catch (err) {
       console.error("Error clearing all todos:", err);
       setError("Failed to clear all todos");
@@ -145,14 +138,17 @@ function App() {
       <div className="todo-app">
         <h1 className="header">todos</h1>
         {error && (
-          <div className="error" style={{
-            color: 'red', 
-            padding: '10px', 
-            marginBottom: '10px', 
-            border: '1px solid red', 
-            borderRadius: '4px',
-            backgroundColor: '#ffebee'
-          }}>
+          <div
+            className="error"
+            style={{
+              color: "red",
+              padding: "10px",
+              marginBottom: "10px",
+              border: "1px solid red",
+              borderRadius: "4px",
+              backgroundColor: "#ffebee",
+            }}
+          >
             {error}
           </div>
         )}
@@ -188,7 +184,7 @@ function App() {
                     className="delete"
                     onClick={() => deleteTodo(todo.id)}
                     title="Delete"
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: "pointer" }}
                   >
                     &#x2715;
                   </span>
