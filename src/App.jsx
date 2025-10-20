@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 
 const API = "https://playground.4geeks.com/todo";
-const USER = "Gemini"; // This matches the name from your JSON object
+const USER = "Gemini"; 
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -10,7 +10,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Create a user (separate endpoint)
+  
   const createUser = async () => {
     try {
       const response = await fetch(`${API}/users/${USER}`, { 
@@ -31,16 +31,15 @@ function App() {
     }
   };
 
-  // Fetch todos from the correct endpoint
+  
   const fetchTodos = async () => {
     try {
       setError(null);
       const resp = await fetch(`${API}/users/${USER}`);
       
       if (resp.status === 404) {
-        // User doesn't exist, create them first
         await createUser();
-        return fetchTodos(); // Retry after creating user
+        return fetchTodos(); 
       }
       
       if (!resp.ok) {
@@ -49,7 +48,7 @@ function App() {
       
       const data = await resp.json();
       
-      // The API returns user data with a 'todos' array
+      
       const userTodos = data.todos || [];
       setTodos(Array.isArray(userTodos) ? userTodos : []);
       
@@ -87,7 +86,7 @@ function App() {
       }
       
       setInput("");
-      await fetchTodos(); // Refresh the list
+      await fetchTodos(); 
       
     } catch (err) {
       console.error("Error adding todo:", err);
@@ -117,13 +116,13 @@ function App() {
   const clearAllTasks = async () => {
     try {
       setError(null);
-      // Delete all todos one by one since there might not be a bulk delete endpoint
+      
       const deletePromises = todos.map(todo => 
         fetch(`${API}/todos/${todo.id}`, { method: "DELETE" })
       );
       
       await Promise.all(deletePromises);
-      await fetchTodos(); // Refresh the list
+      await fetchTodos(); 
       
     } catch (err) {
       console.error("Error clearing all todos:", err);
